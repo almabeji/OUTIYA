@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ar-TN">
+<!--
+  ╔══════════════════════════════════════════════════════╗
+  ║  أوطية آية — Ouytia EYA                              ║
+  ║  Corrections v2 :                                    ║
+  ║  • dir retiré du <html> → géré section par section  ║
+  ║  • Date unifiée : Vendredi / الجمعة                  ║
+  ║  • Classes Tailwind fantômes supprimées              ║
+  ║  • Section FAQ ajoutée (cohérente avec le CSS/JS)    ║
+  ║  • Chemins assets relatifs (sans slash absolu)       ║
+  ║  • Sémantique ARIA améliorée                         ║
+  ╚══════════════════════════════════════════════════════╝
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="description" content="Invitation à la cérémonie d'Ouytia d'Aya El Baji — 14 Août 2026, Salle Aziza, Grombalia">
+  <title>أوطية آية — Ouytia EYA</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400&family=Amiri:ital,wght@0,400;0,700;1,400&family=Scheherazade+New:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     ENVELOPE SCREEN
+     Phase 0 : fermée (visible au chargement)
+     Phase 1 : .phase-open  → cross-fade 0.7s
+     Phase 2 : .phase-zoom  → zoom + blur + fade
+════════════════════════════════════════════ -->
+<div id="envelope-screen"
+     role="button"
+     tabindex="0"
+     aria-label="Cliquez pour ouvrir l'invitation"
+     onclick="openEnvelope()"
+     onkeydown="if(event.key==='Enter'||event.key===' ')openEnvelope()">
+
+  <!-- Enveloppe fermée (phase 0) -->
+  <img
+    id="env-img-closed"
+    src="assets/images/enveloppe_close.png"
+    alt=""
+    aria-hidden="true"
+  />
+
+  <!-- Enveloppe ouverte (phase 1 — opacity:0 par défaut) -->
+  <!-- <img
+    id="env-img-open"
+    src="assets/images/envelope_open.png"
+    alt=""
+    aria-hidden="true"
+    onerror="this.src='assets/images/enveloppe_close.png'"
+  /> -->
+
+  <!-- Overlay dégradé -->
+  <div id="env-overlay" aria-hidden="true"></div>
+
+  <!-- Bloc noms couple -->
+  <div class="env-couple" aria-hidden="true">
+    <span class="env-couple-names" lang="ar">أوطية آية</span>
+    <span class="env-couple-sub">Ouytia &amp; EYA</span>
+  </div>
+
+  <!-- Indication d'interaction -->
+  <div class="env-tap-label" id="env-tap" aria-hidden="true">
+    <div class="env-tap-circle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+      </svg>
+    </div>
+    <span class="env-tap-text">Appuyez pour ouvrir · انقر للفتح</span>
+  </div>
+
+  <!-- Bouton passer -->
+  <button
+    class="env-skip"
+    aria-label="Passer l'animation d'ouverture"
+    onclick="event.stopPropagation(); skipEnvelope()">
+    Passer ↗
+  </button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     MAIN SITE
+════════════════════════════════════════════ -->
+<div id="main-site" aria-hidden="true">
+
+
+  <!-- ── HERO ──────────────────────────────── -->
+  <section id="hero" aria-label="En-tête de l'invitation">
+
+    <!-- Fond sombre de secours (z-index 0) -->
+    <div class="hero-bg-fallback" aria-hidden="true"></div>
+
+    <!-- Vidéo de fond (z-index 1) -->
+    <video class="hero-video" autoplay loop muted playsinline aria-hidden="true">
+      <source src="assets/video/clideo_editor_2c98538a03554348910dccd3fac334fe.mp4" type="video/mp4">
+    </video>
+
+    <!-- Overlay (z-index 2) -->
+    <div class="hero-overlay" aria-hidden="true"></div>
+
+    <!-- Particules (z-index 3) -->
+    <div class="particles" id="particles" aria-hidden="true"></div>
+
+    <!-- Contenu (z-index 4) -->
+    <div class="hero-content">
+
+      <span class="hero-bismillah" lang="ar">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+      <span class="hero-bismillah-fr">Au nom de Dieu, le Clément, le Miséricordieux</span>
+
+      <span class="hero-event-tag">أوطية · Ouytia </span>
+
+      <!-- CORRECTION : nom affiché en h1 avec bonne direction -->
+      <h1 class="hero-names" lang="ar">آية </h1>
+      <span class="hero-names-ar" dir="ltr">EYA</span>
+
+      <div class="hero-divider" aria-hidden="true"></div>
+
+      <!-- CORRECTION DATE : Vendredi / الجمعة (14 août 2026 = vendredi) -->
+      <p class="hero-date" dir="ltr">Vendredi, 14 Août 2026</p>
+      <span class="hero-date-ar" lang="ar" dir="rtl">الجمعة، 14 أوت 2026</span>
+
+      <p class="hero-venue" dir="ltr">Salle des fêtes Aziza · قاعة عزيزة — قرمبالية</p>
+
+      <a href="#" class="save-date-btn" onclick="saveToCalendar(event)" aria-label="Enregistrer la date dans votre agenda">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+        Enregistrer la date · احفظ التاريخ
+      </a>
+    </div>
+
+    <!-- Indicateur de défilement -->
+    <div class="scroll-hint" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="m6 9 6 6 6-6"/>
+      </svg>
+    </div>
+  </section>
+
+
+
+
+
+  <!-- ── COMPTE À REBOURS ───────────────────── -->
+  <section id="countdown" aria-label="Compte à rebours">
+    <div class="section-inner">
+      <span class="section-label reveal" lang="ar">العد التنازلي</span>
+      <h2 class="section-title reveal">Compte à Rebours</h2>
+      <p class="section-sub reveal">Jusqu'à la cérémonie · حتى الحفل</p>
+
+      <div class="countdown-grid reveal" role="timer" aria-live="polite" aria-label="Temps restant avant la cérémonie">
+        <div class="count-block">
+          <span class="count-num" id="cd-days" aria-label="jours">000</span>
+          <span class="count-label" aria-hidden="true">Jours</span>
+          <span class="count-label-ar" lang="ar" aria-hidden="true">أيام</span>
+        </div>
+        <div class="count-block">
+          <span class="count-num" id="cd-hours" aria-label="heures">00</span>
+          <span class="count-label" aria-hidden="true">Heures</span>
+          <span class="count-label-ar" lang="ar" aria-hidden="true">ساعات</span>
+        </div>
+        <div class="count-block">
+          <span class="count-num" id="cd-mins" aria-label="minutes">00</span>
+          <span class="count-label" aria-hidden="true">Minutes</span>
+          <span class="count-label-ar" lang="ar" aria-hidden="true">دقائق</span>
+        </div>
+        <div class="count-block">
+          <span class="count-num" id="cd-secs" aria-label="secondes">00</span>
+          <span class="count-label" aria-hidden="true">Secondes</span>
+          <span class="count-label-ar" lang="ar" aria-hidden="true">ثواني</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── SÉPARATEUR ANNEAUX ─────────────────── -->
+  <!-- CORRECTION : classe CSS pure, plus de Tailwind fantôme -->
+  <div class="rings-separator" aria-hidden="true">
+    <img src="assets/images/E&Y.png" alt="" loading="lazy">
+  </div>
+
+
+  <!-- ── INVITATION FAMILLE ────────────────── -->
+  <section id="family-invite" aria-label="Texte d'invitation">
+
+    <img
+      class="fi-badge-bg"
+      src="assets/images/white-textured-paper-KasY8RAJ.png"
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      onerror="this.style.display='none'"
+    />
+
+    <div class="section-inner" style="max-width:700px; text-align:center;">
+
+      <div class="fi-ornament reveal" aria-hidden="true">
+        <div class="fi-line"></div>
+        <span class="fi-gem">✦</span>
+        <div class="fi-line"></div>
+      </div>
+
+      <p class="fi-opening reveal" lang="ar" dir="rtl">
+        في لحظاتٍ من الفرح لا تُنسى،<br>
+        حين تتجمّع القلوب المحبّة<br>
+        تكتمل البهجة وتزهر الحياة
+      </p>
+
+      <div class="fi-families reveal">
+        <div class="fi-family" dir="rtl">
+          <span class="fi-family-label">عائلة</span>
+          <span class="fi-family-name" lang="ar">السيد محسن الباجي</span>
+          <span class="fi-family-spouse" lang="ar">وحرمه السيدة هاجر السّالم</span>
+        </div>
+      </div>
+
+      <div class="fi-invite-text reveal">
+        <span class="fi-invite-ar" lang="ar" dir="rtl">يتشرَّفون بدعوتكم لحضور حفل أوطية ابنتهم</span>
+        <span class="fi-invite-fr">ont l'honneur de vous convier à la célébration de l'Ouytia de leur fille</span>
+      </div>
+
+      <div class="fi-couple-names reveal">
+        <span class="fi-bride" lang="ar">آية</span>
+      </div>
+      <span class="fi-couple-ar reveal" dir="ltr">EYA El Baji</span>
+
+      <div class="fi-ornament reveal" aria-hidden="true" style="margin-top:2.5rem;">
+        <div class="fi-line"></div>
+        <span class="fi-gem">✦</span>
+        <div class="fi-line"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── SÉPARATEUR ANNEAUX ─────────────────── -->
+  <div class="rings-separator" aria-hidden="true">
+    <img src="assets/images/wedding-rings-_6IG5mf0.png" alt="" loading="lazy">
+  </div>
+
+
+  <!-- ── DÉTAILS DE LA CÉRÉMONIE ────────────── -->
+  <section id="details" aria-label="Détails de la cérémonie">
+    <div class="section-inner">
+      <span class="section-label reveal" lang="ar">تفاصيل الحفل</span>
+      <h2 class="section-title reveal">Détails de la Cérémonie</h2>
+      <p class="section-sub reveal">Tout ce qu'il faut savoir · كل ما تحتاج معرفته</p>
+
+      <div class="detail-card reveal">
+
+        <!-- Visuel décoratif de la salle -->
+        <div class="detail-img-placeholder" aria-hidden="true">
+          <div class="detail-img-inner">
+            <span class="detail-img-title">Salle Aziza</span>
+            <span class="detail-img-subtitle" lang="ar">قاعة عزيزة</span>
+            <div class="detail-img-rule"></div>
+            <span class="detail-img-city">Grombalia · Nabeul</span>
+          </div>
+        </div>
+
+        <!-- Corps de la carte -->
+        <div class="detail-body">
+          <div class="detail-venue-name">Salle des fêtes Aziza</div>
+          <span class="detail-venue-ar" lang="ar" dir="rtl">قاعة عزيزة للأفراح — قرمبالية</span>
+
+          <div class="detail-row">
+            <div class="detail-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 10c0 5-8 13-8 13s-8-8-8-13a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <span>Grombalia, Nabeul, Tunisie</span>
+          </div>
+          <div class="detail-row-ar" lang="ar" dir="rtl">قرمبالية، نابل، تونس</div>
+
+          <div class="detail-row">
+            <div class="detail-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+            </div>
+            <!-- CORRECTION DATE : Vendredi -->
+            <span>Vendredi, 14 Août 2026</span>
+          </div>
+          <!-- CORRECTION DATE AR : الجمعة -->
+          <div class="detail-row-ar" lang="ar" dir="rtl">الجمعة، 14 أوت 2026</div>
+
+          <div class="detail-row">
+            <div class="detail-icon" aria-hidden="true">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <span>À partir de 19h00</span>
+          </div>
+          <div class="detail-row-ar" lang="ar" dir="rtl">ابتداءً من الساعة 19:00 مساءً</div>
+
+          <div class="detail-btns">
+            <a href="https://maps.google.com/?q=Salle+Aziza+Grombalia+Nabeul+Tunisie"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="btn-primary"
+               aria-label="Obtenir l'itinéraire vers la Salle Aziza">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M20 10c0 5-8 13-8 13s-8-8-8-13a8 8 0 0 1 16 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              Itinéraire · الاتجاهات
+            </a>
+            <a href="#" class="btn-outline" onclick="saveToCalendar(event)" aria-label="Ajouter au calendrier">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+              Agenda · التقويم
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── SÉPARATEUR ANNEAUX ─────────────────── -->
+  <div class="rings-separator" aria-hidden="true">
+    <img src="assets/images/locket-illustration-B7vFK6H-.png" alt="" loading="lazy">
+  </div>
+
+
+  <!-- ── CARTE INTERACTIVE ─────────────────── -->
+  <section id="map-section" aria-label="Localisation de la salle">
+    <div class="section-inner">
+      <div class="map-header reveal">
+        <span class="ar" lang="ar">الموقع التفاعلي</span>
+        <h2>Localisation</h2>
+        <p>Grombalia, Nabeul · قرمبالية، نابل</p>
+      </div>
+
+      <div class="map-wrapper reveal">
+        <iframe
+          class="map-frame"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25584.0!2d10.504!3d36.615!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd7a3bcb0e3e3b%3A0x4e7b2d5a8e4c3a12!2sGrombalia%2C%20Tunisia!5e0!3m2!1sfr!2stn!4v1700000000001!5m2!1sfr!2stn"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Salle Aziza — Grombalia, Tunisie"
+        ></iframe>
+
+        <div class="map-pin-overlay" aria-hidden="true">
+          <svg width="28" height="36" viewBox="0 0 32 40" fill="none">
+            <path d="M16 0C7.163 0 0 7.163 0 16c0 10.392 14.286 23.077 15.105 23.788a1.25 1.25 0 0 0 1.79 0C17.714 39.077 32 26.392 32 16 32 7.163 24.837 0 16 0z" fill="#C9A96E"/>
+            <circle cx="16" cy="16" r="7" fill="#F5F0EA"/>
+          </svg>
+        </div>
+
+        <div class="map-info-bar">
+          <div>
+            <div class="map-info-text"><strong>Salle Aziza</strong> · Grombalia, Tunisie</div>
+            <div class="map-info-ar" lang="ar" dir="rtl">قاعة عزيزة · قرمبالية، تونس</div>
+          </div>
+          <a href="https://maps.google.com/?q=Salle+Aziza+Grombalia+Nabeul+Tunisie"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="map-cta"
+             aria-label="Ouvrir dans Google Maps">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M20 10c0 5-8 13-8 13s-8-8-8-13a8 8 0 0 1 16 0Z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Ouvrir Maps · فتح الخريطة
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── SÉPARATEUR ANNEAUX ─────────────────── -->
+  <div class="rings-separator" aria-hidden="true">
+    <img src="assets/images/bow-illustration-DWFdIPv5.png" alt="" loading="lazy">
+  </div>
+
+
+  <!-- ── PROGRAMME ─────────────────────────── -->
+  <section id="programme" aria-label="Programme de la soirée">
+    <div class="section-inner">
+      <span class="section-label reveal" lang="ar">برنامج الأوطية</span>
+      <h2 class="section-title reveal">Programme de l'Ouytia</h2>
+      <p class="section-sub reveal">انضموا إلينا في كل لحظة · Rejoignez-nous à chaque instant</p>
+
+      <ol class="timeline" aria-label="Déroulement de la soirée">
+
+        <li class="tl-item">
+          <div class="tl-dot" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+            </svg>
+          </div>
+          <div class="tl-card">
+            <div class="tl-header">
+              <div>
+                <span class="tl-name-ar" lang="ar" dir="rtl">استقبال المدعوين</span>
+                <span class="tl-name">Accueil des Invités</span>
+              </div>
+              <time class="tl-time" datetime="2026-08-14T20:30">20:30</time>
+            </div>
+            <p class="tl-desc">Cocktail de bienvenue</p>
+            <span class="tl-desc-ar" lang="ar" dir="rtl">كوكتيل الترحيب</span>
+          </div>
+        </li>
+      
+        <li class="tl-item">
+          <div class="tl-dot" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10 9h4M12 7v5M14 22v-4a2 2 0 0 0-4 0v4M18 22V5.618a1 1 0 0 0-.553-.894l-4.553-2.277a2 2 0 0 0-1.788 0L6.553 4.724A1 1 0 0 0 6 5.618V22"/>
+            </svg>
+          </div>
+          <div class="tl-card">
+            <div class="tl-header">
+              <div>
+                <span class="tl-name-ar" lang="ar" dir="rtl">عقد القران</span>
+                <span class="tl-name">Cérémonie de Sde9</span>
+              </div>
+              <time class="tl-time" datetime="2026-08-14T22:00">22:00</time>
+            </div>
+            <p class="tl-desc">L'échange des alliances · Sde9</p>
+            <span class="tl-desc-ar" lang="ar" dir="rtl">تبادل الخواتم والأوطية</span>
+          </div>
+        </li>
+      
+        <li class="tl-item">
+          <div class="tl-dot" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M5.8 11.3 2 22l10.7-3.79M4 3h.01M22 8h.01M15 2h.01M22 20h.01"/>
+              <path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/>
+              <path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z"/>
+            </svg>
+          </div>
+          <div class="tl-card">
+            <div class="tl-header">
+              <div>
+                <span class="tl-name-ar" lang="ar" dir="rtl">نهاية السهرة</span>
+                <span class="tl-name">Fin de la Soirée</span>
+              </div>
+              <time class="tl-time" datetime="2026-08-15T00:00">00:00</time>
+            </div>
+            <p class="tl-desc">Musique et festivités jusqu'à minuit</p>
+            <span class="tl-desc-ar" lang="ar" dir="rtl">موسيقى وفرح حتى منتصف الليل</span>
+          </div>
+        </li>
+      
+      </ol>
+    </div>
+  </section>
+  <!-- ── FOOTER ─────────────────────────────── -->
+  <footer role="contentinfo">
+
+    <div class="footer-ornament" aria-hidden="true">
+      <div class="ornament-line"></div>
+      <span class="ornament-gem">✦</span>
+      <div class="ornament-line"></div>
+    </div>
+  
+    <span class="footer-bismillah" lang="ar">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+    <h2 class="footer-names" lang="ar">أوطية آية</h2>
+    <span class="footer-names-en">Ouytia &amp; EYA</span>
+  
+    <div class="footer-date-row">
+      <span class="footer-date">14 · 08 · 2026</span>
+      <span class="footer-divider-dot" aria-hidden="true">·</span>
+      <span class="footer-date-ar" lang="ar">قرمبالية</span>
+    </div>
+  
+    <p class="footer-credit">Made with love by sister · صُنع بمحبة من الأخت</p>
+  
+  </footer>
+
+
+</div><!-- /#main-site -->
+
+<script src="main.js"></script>
+</body>
+</html>
